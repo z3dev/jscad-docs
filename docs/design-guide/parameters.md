@@ -6,7 +6,7 @@ sidebar_position: 3
 # Design Parameters
 
 A design becomes interactive by exporting a second function,
-`getParameterDefinitions()`. The JSCAD applications turn what it returns into a form,
+`getParameterDefinitions()`. The JSCAD applications transform the parameter list into a standard form for input,
 and pass the values the reader chooses into `main`.
 
 ```js jscad
@@ -27,12 +27,12 @@ export const main = (params) => subtract(
 )
 ```
 
-The examples on this site render with each parameter's initial value. In the JSCAD
-applications the same design gains a panel of inputs.
+The examples on this site render with the initial values of each parameter. In JSCAD
+applications, the same design gains a panel of inputs.
 
-## Declaring parameters
+## Declaring Parameters
 
-`getParameterDefinitions()` returns an array of objects. Each one needs at least a
+The `getParameterDefinitions()` function returns an array of objects. Each parameter needs at least a
 `name` and a `type`; `caption` is the label shown to the reader.
 
 ```js
@@ -42,7 +42,8 @@ export const getParameterDefinitions = () => [
 ]
 ```
 
-The values arrive as a single object, keyed by `name`:
+The params are passed to the `main` function as a single object,
+where each selected value is passed by parameter `name`:
 
 ```js
 export const main = (params) => {
@@ -52,7 +53,7 @@ export const main = (params) => {
 }
 ```
 
-## Parameter types
+## Parameter Types
 
 Parameters are rendered as fields on an HTML form, so the available types follow
 [HTML input types](https://www.w3schools.com/html/html_form_input_types.asp).
@@ -118,10 +119,10 @@ export const main = (params) => params.rounded
 
 If `captions` is omitted, the values themselves are shown.
 
-## Grouping parameters
+## Grouping Parameters
 
 Long forms are easier to read when broken into sections. A `group` parameter starts a
-new section; `initial: 'open'` or `initial: 'closed'` sets whether it begins expanded.
+new section; `initial: 'open'` or `initial: 'closed'` sets whether the group is initially expanded.
 
 ```js
 export const getParameterDefinitions = () => [

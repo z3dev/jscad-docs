@@ -5,6 +5,7 @@ import type {SidebarsConfig} from '@docusaurus/plugin-content-docs';
 const sidebars: SidebarsConfig = {
   guideSidebar: [
     'intro',
+    'quick-reference',
     {
       type: 'category',
       label: 'Design Guide',
@@ -27,7 +28,6 @@ const sidebars: SidebarsConfig = {
       ],
     },
     'migrating-from-v2',
-    'quick-reference',
     'math-guide',
     'file-formats',
     'more-designs',

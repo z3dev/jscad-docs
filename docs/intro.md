@@ -47,7 +47,7 @@ export const main = () => subtract(
 ```
 
 Every example in this guide runs in your browser, using the same
-`@jscad/modeling` library the JSCAD applications use. The code you see is the code
+`@jscad/modeling` library that JSCAD applications use. The code you see is the code
 being rendered — edit it in your own editor and you will get the same shape.
 
 ## Where to run designs
@@ -64,5 +64,5 @@ JSCAD is available as:
 ## Getting help
 
 Questions about JSCAD are best asked in the
-[JSCAD user group](https://openjscad.xyz/forum.html) or on
+[JSCAD User Group](https://openjscad.xyz/forum.html) or on
 [Discord](https://openjscad.xyz/discord.html).

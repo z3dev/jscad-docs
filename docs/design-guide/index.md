@@ -31,7 +31,7 @@ export const main = () => {
 }
 ```
 
-## How the guide is organised
+## How the Guide is Organised
 
 | Page | What it covers |
 | --- | --- |
@@ -49,10 +49,10 @@ export const main = () => {
 | [Colors](./colors.md) | Applying color, and converting between color spaces |
 | [Measurements](./measurements.md) | Asking a shape about its size and position |
 
-## Importing the modeling library
+## Importing the Modeling Library
 
-In v3 every modeling function is exported directly from `@jscad/modeling`. Import
-only what a design uses:
+Every modeling function is exported from `@jscad/modeling`.
+And designs should only import the functions being used. This keeps designs small and compact.
 
 ```js
 import { cuboid, rotateZ, subtract } from '@jscad/modeling'
@@ -68,16 +68,14 @@ const { cuboid } = require('@jscad/modeling').primitives
 const { subtract } = require('@jscad/modeling').booleans
 ```
 
-The namespaces still exist in v3 for compatibility, but the flat exports are the
-documented way to write new designs.
+The v2 namespaces still exist in v3 for compatibility, but should be considered obsolete.
 
 :::
 
-## Shapes are never modified
+## Shapes are Never Modified
 
-Every primitive, transform and operation **returns a new shape** and leaves its
-inputs untouched. This is worth internalising early, because it is the single most
-common source of confusion:
+Every primitive, transform and operation **returns a new shape** and leaves the
+input untouched.
 
 ```js
 const myshape = circle({ radius: 5 })

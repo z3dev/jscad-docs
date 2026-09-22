@@ -20,9 +20,9 @@ rc-car/
   tire.js
 ```
 
-## The entry point
+## The Entry Point
 
-`index.js` is the entry point. Its `main` function creates each of the pieces, moves
+The `index.js` file is the entry point. Inside, the `main` function creates each of the pieces, moves
 them into position, and returns the complete design.
 
 ```js
@@ -45,7 +45,7 @@ export const main = (params) => {
 }
 ```
 
-Each part file exports the function that builds it:
+Each part is placed into a seperate file, e.g. `tire.js`, that declares the functions to build the part:
 
 ```js
 // tire.js
@@ -59,24 +59,21 @@ export const tire = ({ tireRadius = 12, tireWidth = 8 }) => subtract(
 
 :::info[Changed in v3]
 
-Parts are imported as ES modules, and paths include the file extension:
+Parts are imported as usual by using the file path to the file:
 
 ```js
 // v3
 import { tire } from './tire.js'
-
-// v2
-const tire = require('./tire')
 ```
 
-Note the `.js` — ES modules do not resolve extensions the way CommonJS did.
+Note the file path should be specific, including the `.js` file extension.
 
 :::
 
-## Declaring the project a module
+## Declaring the Project as a Module
 
-Add a `package.json` next to `index.js` with `"type": "module"`, so that the files
-are treated as ES modules:
+Finally, add a `package.json` next to `index.js` with `"type": "module"`, so that the files
+are treated as single module:
 
 ```json
 {
@@ -89,10 +86,10 @@ are treated as ES modules:
 }
 ```
 
-The `main` field names the entry point. Drag the whole folder onto a JSCAD instance,
-or point the CLI at it, and the project is loaded as one design.
+The `main` field names the entry point, i.e. the file containing the `main` function. Drag the whole folder onto a JSCAD instance,
+or point the CLI at it, and the project is loaded as as single design.
 
-## Parameters across files
+## Parameters Across Files
 
 Parts can declare their own parameters, and the entry point can gather them up. This
 keeps each part responsible for its own inputs.
@@ -137,7 +134,7 @@ export const main = (params) => {
 Sub-folders work exactly as you would expect — `./subFolder/sphereShape.js` above is
 an ordinary relative import.
 
-## Including external geometry
+## Including External Geometry
 
 Projects can also hold external formats such as STL. Place the file in the project
 directory alongside the other parts:

@@ -5,7 +5,7 @@ sidebar_position: 2
 
 # Anatomy of a Design
 
-A JSCAD design is an ES module that exports one function, `main`, which returns a
+A JSCAD design is an module that exports a special function, `main`, which returns a
 shape.
 
 ```js jscad
@@ -19,27 +19,15 @@ inside `main`.
 
 :::info[Changed in v3]
 
-Designs are ES modules now. The same design in v2 used CommonJS:
-
-```js
-// v2
-const { sphere } = require('@jscad/modeling').primitives
-
-const main = () => sphere({ radius: 10 })
-
-module.exports = { main }
-```
-
-In v3, `import` replaces `require()`, `export` replaces `module.exports`, and
-`sphere` comes straight from `@jscad/modeling` rather than from its `primitives`
-namespace.
+Designs are ES modules now. The same design in v2 used CommonJS modules.
+See the v2 User Guide.
 
 :::
 
-## Returning several shapes
+## Returning Several Shapes
 
-`main` may also return an array of shapes. They are rendered together, and stay
-separate objects — useful when a design has several parts, or when parts should keep
+The `main` function may also return an array of shapes. These are rendered but remain
+as separate objects — useful when a design has several parts, or when parts should keep
 different colors.
 
 ```js jscad
@@ -54,17 +42,17 @@ export const main = () => {
 }
 ```
 
-Arrays may be nested to any depth, so building up a list of parts from several
-sources needs no flattening:
+The array of parts may be nested to any depth, so building up a list of parts from
+several sources is treated the same.
 
 ```js
 export const main = () => [baseplate(), [leftArm(), rightArm()], fasteners()]
 ```
 
-## Splitting a design into functions
+## Splitting a Design into Functions
 
-`main` is ordinary JavaScript, so a design can be broken into as many functions as it
-needs. Anything that repeats, or that has a name worth giving, is a candidate.
+The `main` function is ordinary JavaScript, so a design can be broken into as many functions as it
+needs. Anything that repeats, or has a name worth giving is a candidate.
 
 ```js jscad
 import { cuboid, sphere, translate, union } from '@jscad/modeling'
@@ -88,10 +76,10 @@ export const main = () => [
 Once a design outgrows a single file, move those functions into files of their own —
 see [Projects](./projects.md).
 
-## Asynchronous designs
+## Asynchronous Designs
 
-`main` may be `async`. The JSCAD applications await the result before rendering,
-which makes it possible to load data or geometry while the design is being built.
+The `main` function may be `async`. The JSCAD applications await the result before rendering,
+which makes it possible to load data or create geometry while the design is being built.
 
 ```js
 export const main = async (params) => {
@@ -107,7 +95,7 @@ and the web applications to support asynchronous functions.
 
 :::
 
-## Next steps
+## Next Steps
 
 - [Design Parameters](./parameters.md) — let people change the design without editing it
 - [3D Primitives](./3d-primitives.md) — the shapes available to return

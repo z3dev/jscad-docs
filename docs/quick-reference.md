@@ -5,26 +5,15 @@ sidebar_position: 2
 
 # Quick Reference
 
-Every function in one place, with a working call for each. This page answers "what is
-it called and what does it take?" — the [Design Guide](./design-guide/index.md)
-explains what each one is for, and the
-[API reference](https://openjscad.xyz/docs/) gives full signatures.
-
-Everything comes from a single flat import:
+Everything below comes from a single flat import:
 
 ```js
-import { cuboid, rotateZ, subtract, translate } from '@jscad/modeling'
+import { cuboid, rotateZ, subtract, translate, TAU } from '@jscad/modeling'
 ```
 
-:::info[Changed in v3]
+See the [API Reference](https://openjscad.xyz/v3/docs/) which supplies full signatures and options.
 
-v2 reached into namespaces — `require('@jscad/modeling').primitives` and friends. In
-v3 every function below is exported directly from `@jscad/modeling`. The namespaces
-still exist for compatibility, but the flat imports are the documented form.
-
-:::
-
-## [3D primitives](./design-guide/3d-primitives.md)
+## [3D Primitives](./design-guide/3d-primitives.md)
 
 | Call |
 | --- |
@@ -40,7 +29,7 @@ still exist for compatibility, but the flat imports are the documented form.
 | `const myshape = torus({ innerRadius: 10, outerRadius: 100, innerSegments: 32, outerSegments: 8 })` |
 | `const myshape = polyhedron({ points: mypoints, faces: myfaces, orientation: 'inward' })` |
 
-## [2D primitives](./design-guide/2d-primitives.md)
+## [2D Primitives](./design-guide/2d-primitives.md)
 
 | Call |
 | --- |
@@ -113,9 +102,6 @@ line, each holding `chars`. See [Text](./design-guide/paths-and-text.md#text).
 *Note: the single-axis rotations take the angle first — `rotateX(angle, shape)`.
 Angles are always in radians.*
 
-*Note: `center()` positions relative to `relativeTo`. The v2 user guide called that
-option `center`, which never worked in either version.*
-
 ## [Operations](./design-guide/operations.md)
 
 | Call |
@@ -140,8 +126,7 @@ option `center`, which never worked in either version.*
 
 :::warning[Removed in v3]
 
-`extrudeRectangular()` no longer exists. Offset the shape first, then extrude — see
-[what happened to extrudeRectangular](./design-guide/extrusions.md#what-happened-to-extruderectangular).
+`extrudeRectangular()` no longer exists. Offset the shape first, then extrude.
 
 :::
 
@@ -192,7 +177,7 @@ option `center`, which never worked in either version.*
 | `const total = measureAggregateEpsilon(shapeA, shapeB)` |
 | `const total = measureAggregateVolume(shapeA, shapeB)` |
 
-## [Maths and utilities](./math-guide.md)
+## [Maths and Utilities](./math-guide.md)
 
 | Call |
 | --- |
@@ -214,7 +199,7 @@ Mesh clean-up, mostly needed after importing external geometry.
 | `const newshape = retessellate(myshape)` |
 | `const newshape = generalize({ snap: true, simplify: true, triangulate: false }, myshape)` |
 
-## Design structure
+## [Design Anatomy](./design-guide/anatomy.md)
 
 | Call |
 | --- |
