@@ -6,7 +6,7 @@ sidebar_position: 8
 # Transforms
 
 Any shape can be transformed — moved somewhere else, rotated by an angle, scaled up
-or down. Every transform **returns a new shape** and leaves the original alone.
+or down. Every transform **returns a new shape** and leaves the original untouched.
 
 ```js jscad
 import { cuboid, rotateZ, TAU, translate } from '@jscad/modeling'
@@ -27,7 +27,7 @@ const myshape = circle({ radius: 5 })
 const newshape = scale([5, 10], myshape) // a new circle, scaled as requested
 ```
 
-To replace the original, assign back to it:
+To replace the original, assign again:
 
 ```js
 let myshape = circle({ radius: 5 })
@@ -48,8 +48,8 @@ depending on what they were given.
 ## Orientation
 
 The standard for 3D systems — graphics cards, design tools, and JSCAD alike — is the
-[right-hand rule](https://en.wikipedia.org/wiki/Right-hand_rule). JSCAD produces
-shapes and applies transforms following it throughout.
+[Right-Hand Rule](https://en.wikipedia.org/wiki/Right-hand_rule). JSCAD produces
+shapes and applies transforms following the Right-Hand Rule throughout.
 
 That gives this orientation of the coordinate system:
 
@@ -65,8 +65,7 @@ and these positive rotations:
 
 It takes a little while to internalise, and is easiest to learn by rotating a shape
 by both positive and negative angles and watching what happens. The
-[Math Guide](../math-guide.md#orientation) shows the axes and rotations as models you
-can turn.
+[Math Guide](../math-guide.md#orientation) shows the axes and rotations as models rotate.
 
 ## Translate
 
@@ -112,7 +111,7 @@ import { cuboid, rotate, TAU } from '@jscad/modeling'
 
 export const main = () => rotate(
   [TAU / 4, TAU / 24, TAU / 12],
-  cuboid({ size: [5, 20, 5] })
+  cuboid({ size: [2, 10, 20] })
 )
 ```
 
@@ -269,10 +268,10 @@ export const main = () => {
 
 Align returns a single shape when given one, and an array when given several.
 
-## Matrix transform
+## Matrix Transform
 
 The transforms above are conveniences over matrix mathematics. `transform()` applies
-a 4×4 matrix directly, which is what you want when combining several operations into
+a 4×4 matrix directly, which can be useful when combining several operations into
 one step, or when reusing a matrix across many shapes.
 
 *[Learn about matrix mathematics at MathIsFun.com](http://www.mathsisfun.com/algebra/matrix-introduction.html)*
@@ -290,12 +289,3 @@ export const main = () => {
   return transform(matrix, cube({ size: 10 }))
 }
 ```
-
-:::info[Changed in v3]
-
-The `mat4` constructors follow the `from…` naming used across the maths modules:
-`fromXRotation`, `fromYRotation`, `fromZRotation`, `fromTranslation`, `fromScaling`.
-Each takes the output matrix as its first argument. Some unused `mat4` functions were
-removed in v3.
-
-:::

@@ -5,7 +5,7 @@ sidebar_position: 5
 
 # 3D Primitives
 
-A 3D primitive is a shape with three dimensions — width, depth and height, or X, Y
+A 3D primitive is a shape with three dimensions — width, depth and height, also called X, Y
 and Z. Closed 3D shapes have a measurable volume.
 
 The mathematical study of 3D shapes is called
@@ -22,15 +22,15 @@ export const main = () => [
 ]
 ```
 
-## Resolution of shapes
+## Resolution of Shapes
 
 Every rounded shape takes a `segments` option, controlling tessellation. Setting
 `segments` to 8 means 8 polygons make up a full revolution. Omitting it uses the
 default.
 
 This lets each design choose how much detail it needs — but be aware that
-calculation and rendering time rise with it. For spheres, the polygon count grows
-quadratically as `segments` increases.
+calculation and rendering time increase as the number of segments increase.
+For spheres, the polygon count grows quadratically as `segments` increases.
 
 ```js jscad
 import { sphere, translate } from '@jscad/modeling'
@@ -41,7 +41,7 @@ export const main = () => [8, 16, 32, 64].map((segments, i) =>
 ```
 
 When a design needs a specific resolution expressed as a distance or angle between
-points rather than a segment count, use `radiusToSegments()` to work out the number
+points rather than a segment count, use `radiusToSegments()` to determine the number
 of segments required.
 
 ## Cuboid
@@ -51,7 +51,7 @@ opposite faces equal.
 
 *[Learn about cuboids at MathIsFun.com](http://www.mathsisfun.com/geometry/cuboids-rectangular-prisms.html)*
 
-`size` specifies the extent along the X, Y and Z axes. Cuboids can be created at a
+The `size` specifies the extents along the X, Y and Z axes. Cuboids can be created at a
 requested `center`.
 
 | Option | Default |
@@ -81,7 +81,7 @@ import { cube } from '@jscad/modeling'
 export const main = () => cube({ size: 15 })
 ```
 
-### Rounded cuboid
+### Rounded Cuboid
 
 A cuboid whose corners and edges are rounded, controlled by `roundRadius`.
 
@@ -98,7 +98,7 @@ import { roundedCuboid } from '@jscad/modeling'
 export const main = () => roundedCuboid({
   size: [20, 30, 15],
   roundRadius: 3,
-  segments: 32
+  segments: 16
 })
 ```
 
@@ -106,7 +106,9 @@ export const main = () => roundedCuboid({
 
 A surface with three pairwise perpendicular axes of symmetry meeting at a center.
 
-`radius` gives the size along the X, Y and Z axes.
+*[Learn about spheroids at MathIsFun.com](https://www.mathsisfun.com/geometry/spheroid.html)*
+
+The `radius` gives the lengths along the X, Y and Z axes.
 
 | Option | Default |
 | --- | --- |
@@ -121,7 +123,7 @@ import { ellipsoid } from '@jscad/modeling'
 export const main = () => ellipsoid({ radius: [5, 10, 20], segments: 64 })
 ```
 
-`axes` takes three vectors for the X, Y and Z base vectors, which tilts the ellipsoid
+The `axes` takes three vectors for the X, Y and Z base vectors, which tilts the ellipsoid
 without a separate rotation:
 
 ```js jscad
@@ -155,7 +157,7 @@ export const main = () => sphere({ radius: 10, center: [0, 0, 0], segments: 64 }
 ### Geodesic sphere
 
 A convex polyhedron built from triangles. The base form is the icosahedron, with 20
-faces; `frequency` sets how finely each face is subdivided, and should be a multiple
+faces. The `frequency` sets how finely each face is subdivided, and should be a multiple
 of 6.
 
 | Option | Default |
@@ -189,10 +191,10 @@ import { cylinder } from '@jscad/modeling'
 export const main = () => cylinder({ radius: 5, height: 20, segments: 64 })
 ```
 
-### Elliptic cylinder
+### Elliptic Cylinder
 
 `cylinderElliptic` builds the whole family of cylindrical shapes — including cones,
-by giving the two ends different radii.
+by specifying the radii for both start and end.
 
 | Option | Default |
 | --- | --- |
@@ -221,7 +223,15 @@ export const main = () => [
 ]
 ```
 
-### Rounded cylinder
+:::tip[Angles are radians]
+
+Every angle in JSCAD is in radians. `TAU` is exported as a full turn (2π), which
+makes fractions of a circle read naturally: `TAU / 4` is a quarter turn. To work in
+degrees, convert with `degToRad()`.
+
+:::
+
+### Rounded Cylinder
 
 A cylinder with rounded ends, controlled by `roundRadius`.
 
@@ -283,11 +293,10 @@ export const main = () => torus({
 
 ## Polyhedron
 
-A shape built directly from a list of 3D points and the faces connecting them, for
-when no other primitive fits.
+A shape built directly from a list of 3D points and the faces that connect the points.
 
-Each face must list its vertices counterclockwise, following the right hand rule, or
-it will face the wrong way. `orientation` flips the interpretation for all faces at
+Each face must list the vertices counterclockwise, following the right hand rule, or
+it will face the wrong way. The `orientation` flips the interpretation for all faces at
 once.
 
 | Option | Default |
@@ -307,5 +316,5 @@ export const main = () => polyhedron({
 })
 ```
 
-`colors` takes one RGBA color per face, in the same order as `faces`, letting a
+The `colors` takes one RGBA color per face, in the same order as `faces`, letting a
 single polyhedron carry a different color on each of its faces.

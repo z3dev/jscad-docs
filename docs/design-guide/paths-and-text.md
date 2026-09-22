@@ -23,9 +23,9 @@ export const main = () => [
 ]
 ```
 
-## Creating a path
+## Creating a Path
 
-`line()` builds a path from an array of 2D points:
+The `line()` primitive builds a path from an array of 2D points:
 
 ```js jscad
 import { line } from '@jscad/modeling'
@@ -61,17 +61,16 @@ export const main = () => {
 
 :::warning[Watch the spelling]
 
-The option is `closed`, not `close`. The v2 user guide showed `close` in several
-places, and it never worked in either version — an unknown option is silently
-ignored, so the path stays open and the mistake only surfaces later as a hollow
-extrusion.
+The option is `closed`, not `close`.
+An incorrect option is silently ignored, so the path stays open.
 
 :::
 
-## Curved paths
+## Curved Paths
 
-Curves are approximated with line segments. The `arc` primitive draws one about a
-`center` at a given `radius`, optionally between a start and end angle.
+Curve paths are approximated with line segments. The aproximation becomes closer to actual as the segments increase.
+
+The `arc` primitive draws curved paths about a `center` at a given `radius`, optionally between a start and end angle.
 
 | Option | Default |
 | --- | --- |
@@ -91,10 +90,12 @@ export const main = () => [
 ]
 ```
 
-`makeTangent` adds short line segments at both ends so the gradient at the edges is
+The `makeTangent` adds short line segments at both ends so the gradient at the edges is
 tangent to the arc — useful when the arc is one piece of a longer path.
 
-## Extending a path
+## Extending a Path
+
+Paths, both straight and curved, can be extended by appending additional points or curves.
 
 Every append function returns a **new** path, leaving the original alone.
 
@@ -111,8 +112,8 @@ export const main = () => path2.appendPoints(
 
 `path2.appendArc()` adds a curve, following the
 [SVG elliptical arc specification](http://www.w3.org/TR/SVG/paths.html#PathDataEllipticalArcCommands).
-`endpoint` is required; `radius` takes separate X and Y values, so arcs can be
-elliptical.
+The `endpoint` is required.
+The `radius` takes separate X and Y values, so arcs can be elliptical.
 
 | Option | Default |
 | --- | --- |
@@ -135,8 +136,8 @@ export const main = () => {
 }
 ```
 
-`path2.appendBezier()` adds a Bézier curve. It starts at the path's last point and
-ends at the last control point, with the points in between shaping the transition.
+`path2.appendBezier()` adds a Bézier curve. The new curve starts at the last point of the path, and
+ends at the last control point, with the points in between aproximating the Bezier curve.
 
 Passing `null` as the first control point mirrors the path's previous point into the
 curve, which makes the join between two curves smooth instead of kinked:
@@ -154,9 +155,9 @@ export const main = () => {
 }
 ```
 
-## Turning a path into a 2D shape
+## Turning a Path into a 2D Shape
 
-A **closed** path encloses an area, so its points can become a 2D shape directly:
+A **closed** path encloses an area, and the points can form a 2D shape directly:
 
 ```js jscad
 import { geom2, line, path2 } from '@jscad/modeling'
@@ -168,7 +169,7 @@ export const main = () => {
 }
 ```
 
-An **open** path has no interior, so instead give it thickness with
+An **open** path has no interior, so the path can be given thickness with
 [`offset()`](./offsets.md) — the result is a 2D shape wrapped around the line:
 
 ```js jscad
@@ -183,14 +184,14 @@ export const main = () => {
 
 :::info[Changed in v3]
 
-This was `expand()` in v2. `expand()` and `offset()` are now one function — see
+In v3, `expand()` and `offset()` are now one function, `expand()` — see
 [Offsets](./offsets.md).
 
 :::
 
-## Turning a path into a 3D shape
+## Turning a Path into a 3D Shape
 
-A closed path can go straight into `extrudeLinear()`:
+A closed path can be used with `extrudeLinear()` to create a 3D solid:
 
 ```js jscad
 import { extrudeLinear, path2 } from '@jscad/modeling'
@@ -203,12 +204,14 @@ export const main = () => {
 ```
 
 For an open path, offset it into a 2D shape first, then extrude — that is how walls
-and ribs following a line are made.
+and ribs are made.
 
 ## Text
 
-`vectorChar()` converts one ASCII character into an object describing it. `height` is
-the height of an uppercase character.
+`vectorChar()` converts one ASCII character into an object describing it.
+
+It returns `{ width, height, paths }`, where `paths` is a list of ready-to-use
+path2 objects. The `height` is the height of an uppercase character.
 
 | Option | Default |
 | --- | --- |
@@ -218,8 +221,6 @@ the height of an uppercase character.
 | `extrudeOffset` | `0` |
 | `font` | `'hershey simplex'` (built in) |
 
-It returns `{ width, height, paths }`, where `paths` is a list of ready-to-use
-path2 objects:
 
 ```js jscad
 import { vectorChar } from '@jscad/modeling'
@@ -229,25 +230,14 @@ export const main = () => vectorChar({ height: 30 }, 'H').paths
 
 :::warning[Changed in v3]
 
-Two things moved:
-
-- **Options are no longer optional.** `vectorChar('H')` threw in v3; it must be
-  `vectorChar({}, 'H')`.
-- **You get paths, not raw segments.** v2 returned `{ segments }` of bare point
-  arrays, which every design had to convert by hand:
-
-  ```js
-  // v2 — no longer needed
-  const paths = outlines.segments.map((segment) => path2.fromPoints({close: false}, segment))
-  ```
-
-  v3 returns `paths` already built. Delete the conversion step.
+**Options are no longer optional.**
+`vectorChar()` must be called with options, like `vectorChar({}, 'H')`
 
 :::
 
-### Text strings
+### Text Strings
 
-`vectorText()` does the same for a whole string. Split lines with `\n`.
+`vectorText()` does the same for a whole string, splitting lines with `\n`.
 
 | Option | Default |
 | --- | --- |
@@ -275,24 +265,22 @@ export const main = () => textPaths({ height: 20, align: 'center' }, 'JSCAD\nRoc
 
 :::warning[Changed in v3]
 
-`vectorText()` now returns a **nested** structure — an array of lines, each
-`{ width, height, chars }`, each character `{ width, height, paths }`. v2 returned one
-flat array of segments. The two-step `flatMap` above is the replacement for v2's
-`outlines.map(...)`.
+`vectorText()` now returns a **nested** structure — an array of lines, each line having 
+`{ width, height, chars }`,
+And an array of `chars`, each character having `{ width, height, paths }`.
 
 The `input` option is also gone: `vectorText({ input: 'JSCAD' })` throws. Pass the
 text as the second argument.
 
 `letterSpacing` changed default from `1` to `0`, so v2 text comes out tighter unless
 you pass it explicitly. `height` and `lineSpacing` are unchanged at `14` and `30/14`
-— the v2 guide listed those as `21` and `1.4`, which never matched the library.
 
 Keeping the line and character structure is what makes per-line and per-character
 work — measuring, colouring, spacing — possible without re-parsing.
 
 :::
 
-### Text as a solid
+### Text as a Solid
 
 Character strokes are open paths, so give them width with `offset()` and extrude:
 
@@ -314,7 +302,7 @@ export const main = () => union(
 `extrudeOffset` exists for exactly this case: it shrinks the glyphs by the width you
 are about to add, so the letters keep their intended size after offsetting.
 
-### Other fonts
+### Other Fonts
 
 The built-in font is
 [Hershey simplex](http://paulbourke.net/dataformats/hershey/), supplied by the
@@ -338,8 +326,8 @@ export const main = () => textPaths(
 )
 ```
 
-*Note: these are single-line stroke fonts, not TrueType. Rendering TrueType glyphs
-needs a separate library to turn them into outlines first.*
+*Note: These are single-line stroke fonts, not TrueType fonts. Rendering TrueType glyphs
+needs a separate library to turn them into outlines first. See [jscad-text](https://github.com/jscad-community/jscad-text/tree/V3)*
 
 *Only ASCII characters are supported. Unsupported characters are replaced with a
 question mark.*

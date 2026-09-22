@@ -5,15 +5,15 @@ sidebar_position: 6
 
 # 2D Primitives
 
-A 2D primitive is a shape with two dimensions — width and length, or X and Y. It has
-no thickness, though JSCAD draws it as a very thin shape so you can see it.
+A 2D primitive is a shape with two dimensions — width and length, also called X and Y. It has
+no thickness nor volume, though JSCAD renders 2D primitives as a very thin shape.
 
 One way of thinking about 2D shapes is anything that lies flat on a piece of paper,
 like a drawn circle or square. The mathematical study of them is called
 [plane geometry](https://en.m.wikipedia.org/wiki/Plane_(geometry)).
 
 2D shapes matter because they are the starting point for
-[extrusions](./extrusions.md): draw a profile, then sweep it into a solid.
+[extrusions](./extrusions.md): draw a profile, then extrude into a 3D solid.
 
 ```js jscad
 import { circle, rectangle, star, translate, triangle } from '@jscad/modeling'
@@ -26,7 +26,7 @@ export const main = () => [
 ]
 ```
 
-## Resolution of shapes
+## Resolution of Shapes
 
 As with 3D shapes, every rounded 2D shape takes a `segments` option controlling
 tessellation. Setting `segments` to 8 means 8 segments span a full revolution.
@@ -38,7 +38,7 @@ A shape with four straight sides, where every interior angle is a right angle.
 
 *[Learn about rectangles at MathIsFun.com](http://www.mathsisfun.com/geometry/rectangle.html)*
 
-`size` gives the extent across the X and Y axes.
+The `size` gives the extent across the X and Y axes.
 
 | Option | Default |
 | --- | --- |
@@ -55,6 +55,8 @@ export const main = () => rectangle({ size: [30, 40], center: [0, 0] })
 
 The specialised square takes a single number for all sides.
 
+*[Learn about squares at MathIsFun.com](http://www.mathsisfun.com/geometry/square.html)*
+
 | Option | Default |
 | --- | --- |
 | `size` | `2` |
@@ -66,7 +68,7 @@ import { square } from '@jscad/modeling'
 export const main = () => square({ size: 30 })
 ```
 
-### Rounded rectangle
+### Rounded Rectangle
 
 A rectangle with rounded corners, controlled by `roundRadius`.
 
@@ -89,10 +91,11 @@ export const main = () => roundedRectangle({
 
 ## Ellipse
 
-A shape surrounding two focal points, such that for every point on the curve the sum
-of the distances to the two focal points is constant.
+A shape surrounding two focal points, such that the set of all points have the same sum distance from the two focal points.
 
-`radius` gives the size along the X and Y axes. `startAngle` and `endAngle` cut the
+*[Learn about ellipse at MathIsFun.com](http://www.mathsisfun.com/geometry/ellipse.html)*
+
+The `radius` gives the size along the X and Y axes. `startAngle` and `endAngle` cut the
 ellipse into an arc-like wedge.
 
 | Option | Default |
@@ -120,6 +123,14 @@ export const main = () => ellipse({
 })
 ```
 
+:::tip[Angles are radians]
+
+Every angle in JSCAD is in radians. `TAU` is exported as a full turn (2π), which
+makes fractions of a circle read naturally: `TAU / 4` is a quarter turn. To work in
+degrees, convert with `degToRad()`.
+
+:::
+
 ### Circle
 
 A curve drawn at a constant distance from a center point.
@@ -140,14 +151,6 @@ import { circle } from '@jscad/modeling'
 export const main = () => circle({ radius: 15, segments: 64 })
 ```
 
-:::tip[Angles are radians]
-
-Every angle in JSCAD is in radians. `TAU` is exported as a full turn (2π), which
-makes fractions of a circle read naturally: `TAU / 4` is a quarter turn. To work in
-degrees, convert with `degToRad()`.
-
-:::
-
 ## Polygon
 
 A closed shape with straight sides, built from a list of points.
@@ -167,8 +170,7 @@ export const main = () => polygon({
 Points must be given in counterclockwise order. If a polygon that will be extruded is
 wound the other way, the faces of the resulting solid point inwards.
 
-If you cannot control the ordering, pass `orientation: 'clockwise'` and JSCAD will
-correct it for you.
+Pass `orientation: 'clockwise'` to reverse the ordering if necessary.
 
 :::
 
@@ -184,7 +186,7 @@ const wall = [[0, 0], [10, 0], [10, 10], [0, 10]]
 export const main = () => polygon({ points: [roof, wall] })
 ```
 
-`paths` indexes into a flat list of points instead, which is convenient when points
+The `paths` indexes into a flat list of points instead, which is convenient when points
 are shared or generated:
 
 ```js
@@ -201,7 +203,7 @@ polygon({ points: [...roof, ...wall], paths: [[0, 1, 2], [3, 4, 5, 6]] })
 
 A shape made from straight rays extending from a center.
 
-`vertices` is the number of points (P) and `density` controls how the points are
+The `vertices` is the number of points (P) and the `density` controls how the points are
 connected (Q), producing the classic P/Q star polygons. Leave `innerRadius` at 0 and
 JSCAD calculates it from the density.
 
@@ -229,8 +231,8 @@ export const main = () => [
 ## Triangle
 
 A triangle described the way a trigonometry problem is: by which sides and angles are
-known. `type` is a string of `S` for each known side and `A` for each known angle,
-and `values` supplies them in that order. Angles are in radians.
+known. The `type` is a string of `S` for each known side and `A` for each known angle,
+while `values` supplies lenght or angle in the same order.
 
 *[Learn about solving triangles at MathIsFun.com](https://www.mathsisfun.com/algebra/trig-solving-triangles.html)*
 

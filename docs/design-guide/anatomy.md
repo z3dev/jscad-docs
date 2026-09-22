@@ -5,7 +5,7 @@ sidebar_position: 2
 
 # Anatomy of a Design
 
-A JSCAD design is an module that exports a special function, `main`, which returns a
+A JSCAD design is an JavaScript module that exports a special function, `main`, of which returns a
 shape.
 
 ```js jscad
