@@ -7,8 +7,8 @@ sidebar_position: 11
 
 The [extrusions](./extrusions.md) each sweep a profile in one fixed way — straight
 up, around an axis, along a helix. When none of them fits, `extrudeFromSlices()`
-gives you the level underneath: you describe the cross section at every step, and
-JSCAD stitches the steps into a solid.
+provides another layer to describe the cross section at every step, and
+stitch together the crosss sections into a solid.
 
 Bézier curves supply the maths for driving that — a smooth function you can sample at
 each step for a position, a scale, or a direction.
@@ -43,18 +43,9 @@ export const main = () => {
 }
 ```
 
-:::info[New in v3]
-
-None of this was in the v2 user guide. `bezier` and `slice` are documented here for
-the first time, and both changed shape in v3 — a slice's data is now `contours`
-rather than `edges`.
-
-:::
-
 ## Slices
 
-A **slice** is one planar cross section: a list of contours, each a list of 3D
-vertices that all lie in the same plane.
+A **slice** is single planar cross section, that consists of a list of contours in 3D space.
 
 ```js
 // the data structure
@@ -69,7 +60,7 @@ import { slice } from '@jscad/modeling'
 const square = slice.fromVertices([[10, 10], [-10, 10], [-10, -10], [10, -10]])
 ```
 
-Or from the outlines of an existing 2D shape, which is how you turn any
+Or from the outlines of an existing 2D shape, which is how to turn any
 [2D primitive](./2d-primitives.md) into a starting profile:
 
 ```js
@@ -82,18 +73,10 @@ Slices are transformed with matrices rather than the usual transform functions:
 `slice.transform(matrix, myslice)`. See
 [Matrix transform](./transforms.md#matrix-transform) for building the matrices.
 
-:::warning[`fromGeom2` was renamed]
 
-Examples in the JSCAD repository still call `slice.fromGeom2(myshape)`. That function
-does not exist in `@jscad/modeling@3.0.7-alpha.0` — it is now
-`slice.fromOutlines(geom2.toOutlines(myshape))`. Code copied from those examples will
-fail with *"slice.fromGeom2 is not a function"*.
+## Extruding from Slices
 
-:::
-
-## Extruding from slices
-
-`extrudeFromSlices()` calls your callback once per slice and lofts the results
+`extrudeFromSlices()` calls the given callback once per slice and lofts the results
 together.
 
 | Option | Default | Meaning |
@@ -109,12 +92,12 @@ The callback receives:
 
 - **`progress`** — how far along, from 0 to 1
 - **`index`** — the slice number, from 0 to `numberOfSlices - 1`
-- **`base`** — the base object you passed in, unchanged
+- **`base`** — the base object as provided, unchanged
 
 Return a slice, or `null` to skip that step.
 
 Because each slice is generated independently, successive slices need not have the
-same number of points — which is how you morph one profile into another:
+same number of points — which allows the slices to morph one profile into another:
 
 ```js jscad
 import { circle, extrudeFromSlices, geom2, mat4, slice } from '@jscad/modeling'
@@ -135,12 +118,12 @@ export const main = () => extrudeFromSlices({
 ```
 
 Passing a 2D shape with no callback simply extrudes it, which is a quick way to check
-your base is what you think it is.
+that the 2D shape is usable as provided.
 
-## Bézier curves
+## Bézier Curves
 
-A Bézier curve in JSCAD is a mathematical object, not geometry. You create one from
-control points and then *sample* it — it never becomes a shape by itself.
+A Bézier curve is a mathematical object, not a renderable geometry. A curve is created from
+control points and then *sampled* — it never becomes a shape by itself.
 
 ```js
 import { bezier } from '@jscad/modeling'
@@ -176,11 +159,11 @@ const path = bezier.create([[0, 0, 0], [10, 20, 5], [20, 0, 10]])
 bezier.valueAt(0.5, path)     // [10, 10, 5]
 ```
 
-`arcLengthToT()` matters when you want *evenly spaced* samples. Stepping `t` in equal
+`arcLengthToT()` matters when want *evenly spaced* samples are required. Stepping `t` in equal
 increments does not step evenly along the curve — the curve moves faster where the
 control points pull harder.
 
-### Sweeping a profile along a curve
+### Sweeping a Profile along a Curve
 
 Combining the two halves of this page — sample a 3D curve for position, its tangent
 for direction, and emit a slice at each step — gives a tube following an arbitrary
@@ -228,9 +211,9 @@ Rotating a profile onto a tangent is the fiddly part of any sweep. Watch for the
 degenerate case where the tangent points opposite the starting direction — the
 rotation axis vanishes and the orientation flips.
 
-## 3D paths
+## 3D Paths
 
-`path3` is new in v3: the 3D counterpart of [`path2`](./paths-and-text.md), a list of
+`path3` is the 3D counterpart of [`path2`](./paths-and-text.md), a list of
 ordered vertices in space.
 
 ```js
@@ -243,20 +226,9 @@ mypath = path3.concat(mypath, path3.fromVertices({}, [[8, 3, 2]]))
 It supports `create`, `fromVertices`, `toVertices`, `clone`, `close`, `concat`,
 `reverse`, `transform`, `equals`, `isA` and `validate`, and can be measured.
 
-:::warning[Nothing consumes a path3 yet]
-
-In `@jscad/modeling@3.0.7-alpha.0`, `path3` is a data structure and little more:
-
-- **It does not render.** The viewer converts geom2, geom3 and path2; a path3 is
-  skipped, so a design returning one shows nothing at all — here or in the JSCAD
-  applications.
-- **Operations silently ignore it.** `offset()`, `extrudeLinear()` and `hull()` all
-  return the path unchanged rather than erroring, and `hull()` discards its other
-  arguments. `union()` at least throws *"union unsupported geometry type"*.
-
 So a path3 is currently useful for holding and transforming a set of 3D vertices —
 computing a route, then reading it back with `toVertices()` to drive something else.
+
 To make a visible shape from a 3D route, sample it into slices as
 [above](#sweeping-a-profile-along-a-curve).
 
-:::

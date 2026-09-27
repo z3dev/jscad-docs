@@ -18,10 +18,11 @@ export const main = () => Array.from({ length: 8 }, (_, i) => colorize(
 ```
 
 Color is not only about how a model looks on screen. It also drives filament
-selection when printing, so **apply color as the last step in a design** — boolean
-operations on already-colored shapes can give the result a color you did not intend.
+selection when printing, so **apply color as the last step in a design**.
 
-## colorize
+NOTE: Some operations, such as subtract(), do not retain the original color.
+
+## Colorize
 
 `colorize()` takes RGB components between 0 and 1 — not 0 to 255 — and an optional
 fourth value for alpha.
@@ -46,12 +47,12 @@ const redParts = colorize([1, 0, 0], chassis, bracket, cover)
 
 Transparent shapes are drawn after opaque ones, but among themselves the drawing
 order decides what shows through what. A shape may not look transparent depending on
-what sits behind it. If a result looks wrong, try a different alpha value, or reorder
+what's behind it. If a result looks wrong, try a different alpha value, or reorder
 the shapes returned from `main`.
 
 :::
 
-## Named colors
+## Named Colors
 
 `colorNameToRgb()` looks up any of the 147
 [CSS extended color keywords](https://www.w3.org/TR/css3-color/#svg-color). Names are
@@ -76,12 +77,12 @@ import { colorize, cssColors, sphere } from '@jscad/modeling'
 const mysphere = colorize(cssColors.fuchsia, sphere())
 ```
 
-## Converting between color spaces
+## Converting between Color Spaces
 
 Colors rarely start life as JSCAD's 0-to-1 RGB triples. These functions convert from
-the notations you are more likely to have — a hex string from a
-[color parameter](./parameters.md#parameter-types), or an HSL value you are stepping
-through to build a palette.
+the other notations to RGB, and visaversa. For example, a hex string from a
+[color parameter](./parameters.md#parameter-types), or an HSL values for stepping
+through a palette.
 
 | Function | Takes | Returns |
 | --- | --- | --- |
@@ -116,7 +117,7 @@ HSL is the convenient space for generating a palette in code, because stepping t
 hue while holding saturation and lightness gives evenly-weighted colors — which is
 what the example at the top of this page does.
 
-## Coloring individual faces
+## Coloring Individual Faces
 
 Most shapes carry one color for the whole geometry. A
 [polyhedron](./3d-primitives.md#polyhedron) is the exception: its `colors` option
@@ -135,18 +136,10 @@ export const main = () => polyhedron({
 })
 ```
 
-:::info[Changed in v3]
-
-`offset()` and the extrusions now preserve the color of the shape they are given, so
-a colored profile stays colored through to the solid. In v2 the color was dropped and
-had to be reapplied afterwards.
-
-:::
-
-## Colors from parameters
+## Colors from Design Parameters
 
 A `color` [design parameter](./parameters.md) arrives as a CSS hex string, which
-`hexToRgb()` turns into something `colorize()` accepts:
+`hexToRgb()` converts into the RGB specification that `colorize()` accepts:
 
 ```js jscad
 import { colorize, hexToRgb, roundedCuboid } from '@jscad/modeling'
