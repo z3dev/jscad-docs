@@ -5,9 +5,9 @@ sidebar_position: 3
 
 # Design Parameters
 
-A design becomes interactive by exporting a second function,
-`getParameterDefinitions()`. The JSCAD applications transform the parameter list into a standard form for input,
-and pass the values the reader chooses into `main`.
+A design becomes interactive by exporting a second function, `getParameterDefinitions()`.
+The JSCAD application transforms the parameter definitions into a form for input.
+And whatever is input is passed as values to the `main` function of the design.
 
 ```js jscad
 import { cuboid, subtract, translate } from '@jscad/modeling'
@@ -27,13 +27,13 @@ export const main = (params) => subtract(
 )
 ```
 
-The examples on this site render with the initial values of each parameter. In JSCAD
-applications, the same design gains a panel of inputs.
+NOTE: The above design uses the `initial` value of each parameter.
 
 ## Declaring Parameters
 
-The `getParameterDefinitions()` function returns an array of objects. Each parameter needs at least a
-`name` and a `type`; `caption` is the label shown to the reader.
+The `getParameterDefinitions()` function returns an array of definitions.
+Each definition needs at least a `name` and a `type`.
+In addition, a `caption` provides context to the reader.
 
 ```js
 export const getParameterDefinitions = () => [
@@ -42,8 +42,8 @@ export const getParameterDefinitions = () => [
 ]
 ```
 
-The params are passed to the `main` function as a single object,
-where each selected value is passed by parameter `name`:
+The selected values are passed to the `main` function as a single object,
+where each parameter `name` contains the selected value:
 
 ```js
 export const main = (params) => {
@@ -98,6 +98,8 @@ export const main = (params) => colorize(hexToRgb(params.color), sphere())
 The `choice` type presents a drop-down list. `captions` are what the reader sees;
 `values` are what `main` receives.
 
+NOTE: If `captions` is omitted, the values themselves are shown.
+
 ```js jscad
 import { cuboid, roundedCuboid } from '@jscad/modeling'
 
@@ -117,7 +119,7 @@ export const main = (params) => params.rounded
   : cuboid({ size: [20, 20, 20] })
 ```
 
-If `captions` is omitted, the values themselves are shown.
+NOTE: The above design uses the `initial` value of each parameter.
 
 ## Grouping Parameters
 

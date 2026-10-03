@@ -15,14 +15,14 @@ The JSCAD applications execute the script, generate shapes, apply transforms, pe
 operations, and render the result for viewing.
 
 ```js jscad
-import { colorize, cylinder, subtract, translate, union } from '@jscad/modeling'
+import { colorize, cylinder, subtract, translate, union, TAU } from '@jscad/modeling'
 
 export const main = () => {
   const body = cylinder({ radius: 20, height: 8 })
   const spindle = cylinder({ radius: 4, height: 14 })
   const bolts = [0, 1, 2, 3].map((i) =>
     translate(
-      [Math.cos(i * Math.PI / 2) * 13, Math.sin(i * Math.PI / 2) * 13, 0],
+      [Math.cos(i * TAU / 4) * 13, Math.sin(i * TAU / 4) * 13, 0],
       cylinder({ radius: 2, height: 10 })
     )
   )
@@ -51,8 +51,9 @@ export const main = () => {
 
 ## Importing the Modeling Library
 
-Every modeling function is exported from `@jscad/modeling`.
-And designs should only import the functions being used. This keeps designs small and compact.
+All modeling functions are exported from `@jscad/modeling`,
+allowing designs to import only the functions being used.
+This keeps designs small and compact.
 
 ```js
 import { cuboid, rotateZ, subtract } from '@jscad/modeling'
@@ -74,15 +75,15 @@ The v2 namespaces still exist in v3 for compatibility, but should be considered 
 
 ## Shapes are Never Modified
 
-Every primitive, transform and operation **returns a new shape** and leaves the
-input untouched.
+One key point to remember is that operations always **return a new shape**
+and leave the orginal shape untouched.
 
 ```js
-const myshape = circle({ radius: 5 })
-scale([2, 2], myshape) // discarded — myshape is unchanged
+const mycircle = circle({ radius: 5 })
+const newshape = scale([2, 2], mycircle) // mycircle is unchanged
 ```
 
-To keep a result, assign it:
+If the old shape is unnecessary then assign to the same variable:
 
 ```js
 let myshape = circle({ radius: 5 })

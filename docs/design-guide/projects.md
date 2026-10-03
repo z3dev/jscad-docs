@@ -5,8 +5,8 @@ sidebar_position: 4
 
 # Projects
 
-As a design grows, the need for smaller, reusable parts becomes obvious. That is the
-point at which to reach for a *project*.
+As a design grows, the need for smaller, reusable parts becomes obvious.
+That is the starting point of a *project*.
 
 A project is a directory containing several files, each holding part of the design.
 A design for an RC car, for instance, has parts worth separating:
@@ -22,14 +22,16 @@ rc-car/
 
 ## The Entry Point
 
-The `index.js` file is the entry point. Inside, the `main` function creates each of the pieces, moves
-them into position, and returns the complete design.
+The `index.js` file is the entry point, and contains the `main` function to create each of the pieces,
+move them into position, and assemble the final design.
 
 ```js
+import { translate } from '@jscad/modeling'
+
+// parts
 import { chassis } from './chassis.js'
 import { body } from './body.js'
 import { tire } from './tire.js'
-import { translate } from '@jscad/modeling'
 
 export const main = (params) => {
   const wheelbase = params.wheelbase
@@ -45,7 +47,7 @@ export const main = (params) => {
 }
 ```
 
-Each part is placed into a seperate file, e.g. `tire.js`, that declares the functions to build the part:
+Each part is organized as a seperate file, e.g. `tire.js`, that declares the functions to build the part:
 
 ```js
 // tire.js
@@ -59,21 +61,23 @@ export const tire = ({ tireRadius = 12, tireWidth = 8 }) => subtract(
 
 :::info[Changed in v3]
 
-Parts are imported as usual by using the file path to the file:
+Parts are imported by specifying the file path:
 
 ```js
-// v3
 import { tire } from './tire.js'
 ```
 
-Note the file path should be specific, including the `.js` file extension.
+NOTE: The file path must include the `.js` file extension.
 
 :::
 
-## Declaring the Project as a Module
+## Declaring the Project
 
-Finally, add a `package.json` next to `index.js` with `"type": "module"`, so that the files
-are treated as single module:
+Finally, create a file named `package.json` inside the directory
+in order to declare the the project as single JavaScript module.
+This allows other projects to import parts from this project.
+
+The `main` field names the entry point, i.e. the file containing the `main` function.
 
 ```json
 {
@@ -86,8 +90,8 @@ are treated as single module:
 }
 ```
 
-The `main` field names the entry point, i.e. the file containing the `main` function. Drag the whole folder onto a JSCAD instance,
-or point the CLI at it, and the project is loaded as as single design.
+Once ready, drag-n-drop the whole directory onto the JSCAD UI,
+and the project is loaded as a single design.
 
 ## Parameters Across Files
 
